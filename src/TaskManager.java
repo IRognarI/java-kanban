@@ -26,7 +26,7 @@ public class TaskManager {
         Subtask subtask = new Subtask(idCounter++, title, description, Status.NEW, epicId);
         subtasks.put(subtask.getId(), subtask);
         epics.get(epicId).addSubtask(subtask.getId());
-        return subtask; // Статус эпика обновляется в updateSubtask
+        return subtask;
     }
 
     public Task getTaskById(int id) {
@@ -89,7 +89,7 @@ public class TaskManager {
     public ArrayList<Subtask> getSubtasksByEpicId(int epicId) {
         Epic epic = epics.get(epicId);
         if (epic == null) {
-            return new ArrayList<>(); // Если нет такого эпика, возвращаем пустой список
+            return new ArrayList<>();
         }
 
         ArrayList<Subtask> epicSubtasks = new ArrayList<>();
@@ -102,7 +102,7 @@ public class TaskManager {
     private void updateEpicStatus(int epicId) {
         Epic epic = epics.get(epicId);
         if (epic == null) {
-            return; // Если нет такого эпика, ничего не делаем
+            return;
         }
 
         ArrayList<Subtask> subtasksList = getSubtasksByEpicId(epicId);
@@ -122,7 +122,7 @@ public class TaskManager {
                     break;
                 case IN_PROGRESS:
                     anyInProgress = true;
-                    allDone = false; // Если хотя бы одна подзадача в процессе, не все завершены
+                    allDone = false;
                     break;
                 case DONE:
                     break;
