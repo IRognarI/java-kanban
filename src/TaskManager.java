@@ -47,12 +47,12 @@ public class TaskManager {
 
     public void updateEpic(Epic epic) {
         epics.put(epic.getId(), epic);
-        updateEpicStatus(epic.getId()); // Обновляем статус
+        updateEpicStatus(epic.getId());
     }
 
     public void updateSubtask(Subtask subtask) {
         subtasks.put(subtask.getId(), subtask);
-        updateEpicStatus(subtask.getEpicId()); // Обновляем статус эпика
+        updateEpicStatus(subtask.getEpicId());
     }
 
     public void removeTask(int id) {
