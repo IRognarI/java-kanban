@@ -7,23 +7,24 @@ public class TaskManager {
     private HashMap<Integer, Subtask> subtasks = new HashMap<>();
     private int idCounter = 1;
 
-    public Task createTask(String title, String description) {
-        Task task = new Task(idCounter++, title, description, Status.NEW);
+    public Task createTask(Task task) {
+        task.setId(idCounter++);
         tasks.put(task.getId(), task);
         return task;
     }
 
-    public Epic createEpic(String title, String description) {
-        Epic epic = new Epic(idCounter++, title, description);
+    public Epic createEpic(Epic epic) {
+        epic.setId(idCounter++);
         epics.put(epic.getId(), epic);
         return epic;
     }
 
-    public Subtask createSubtask(String title, String description, int epicId) {
+    public Subtask createSubtask(Subtask subtask) {
+        int epicId = subtask.getEpicId();
         if (!epics.containsKey(epicId)) {
             throw new IllegalArgumentException("Epic with the given ID does not exist.");
         }
-        Subtask subtask = new Subtask(idCounter++, title, description, Status.NEW, epicId);
+        subtask.setId(idCounter++);
         subtasks.put(subtask.getId(), subtask);
         epics.get(epicId).addSubtask(subtask.getId());
         return subtask;
@@ -60,7 +61,12 @@ public class TaskManager {
     }
 
     public void removeEpic(int id) {
-        epics.remove(id);
+        Epic epic = epics.remove(id);
+        if (epic != null) {
+            for (int subtaskId : epic.getSubtaskId()) {
+                subtasks.remove(subtaskId);
+            }
+        }
     }
 
     public void removeSubtask(int id) {
