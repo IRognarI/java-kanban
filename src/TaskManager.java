@@ -27,6 +27,7 @@ public class TaskManager {
         subtask.setId(idCounter++);
         subtasks.put(subtask.getId(), subtask);
         epics.get(epicId).addSubtask(subtask.getId());
+        updateEpicStatus(epicId); // Обновление статуса эпика после добавления подзадачи
         return subtask;
     }
 
@@ -118,29 +119,25 @@ public class TaskManager {
             return;
         }
 
-        boolean anyInProgress = false;
+        boolean allNew = true;
         boolean allDone = true;
 
         for (Subtask subtask : subtasksList) {
-            switch (subtask.getStatus()) {
-                case NEW:
-                    allDone = false;
-                    break;
-                case IN_PROGRESS:
-                    anyInProgress = true;
-                    allDone = false;
-                    break;
-                case DONE:
-                    break;
+            Status status = subtask.getStatus();
+            if (status != Status.NEW) {
+                allNew = false;
+            }
+            if (status != Status.DONE) {
+                allDone = false;
             }
         }
 
-        if (allDone) {
-            epic.setStatus(Status.DONE);
-        } else if (anyInProgress) {
-            epic.setStatus(Status.IN_PROGRESS);
-        } else {
+        if (allNew) {
             epic.setStatus(Status.NEW);
+        } else if (allDone) {
+            epic.setStatus(Status.DONE);
+        } else {
+            epic.setStatus(Status.IN_PROGRESS);
         }
     }
 }
