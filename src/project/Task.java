@@ -1,3 +1,5 @@
+package project;
+
 public class Task {
     private int id;
     private String title;
@@ -5,6 +7,18 @@ public class Task {
     private Status status;
 
     public Task(String title, String description, Status status) {
+        this.title = title;
+        this.description = description;
+        this.status = status;
+    }
+
+    public Task (String title, String description) {
+        this.title = title;
+        this.description = description;
+    }
+
+    public Task (int id, String title, String description, Status status) {
+        this.id = id;
         this.title = title;
         this.description = description;
         this.status = status;
