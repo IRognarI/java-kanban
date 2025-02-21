@@ -1,3 +1,5 @@
+package managerTest;
+
 import managers.InMemoryHistoryManager;
 import managers.InMemoryTaskManager;
 import managers.Managers;
