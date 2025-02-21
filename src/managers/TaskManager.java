@@ -1,8 +1,12 @@
-package project;
+package managers;
 
-import java.util.ArrayList;
+import tasks.Epic;
+import tasks.Subtask;
+import tasks.Task;
+
 import java.util.List;
 
+/**Данный интерфейс создан для реализации логики приложения. В нем декларируются основные методы.*/
 public interface TaskManager {
     Task createTask(Task task);
 
@@ -28,15 +32,13 @@ public interface TaskManager {
 
     void removeSubtask(int id);
 
-    ArrayList<Task> getAllTasks();
+    List<Task> getAllTasks();
 
-    ArrayList<Epic> getAllEpics();
+    List<Epic> getAllEpics();
 
-    ArrayList<Subtask> getAllSubtasks();
+    List<Subtask> getAllSubtasks();
 
-    ArrayList<Subtask> getSubtasksByEpicId(int epicId);
-
-    void updateEpicStatus(int epicId);
+    List<Subtask> getSubtasksByEpicId(int epicId);
 
     List<Task> getHistory();
 }

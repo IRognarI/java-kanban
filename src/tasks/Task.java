@@ -1,5 +1,8 @@
-package project;
+package tasks;
 
+import status.Status;
+
+/**Класс для создания основной задачи*/
 public class Task {
     private int id;
     private String title;

@@ -1,5 +1,8 @@
-package project;
+package tasks;
 
+import status.Status;
+
+/**Класс наследующий Task, а так же является маленькой задачей класса Epic*/
 public class Subtask extends Task {
     private int epicId;
     private int updateID;
