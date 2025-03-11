@@ -9,5 +9,7 @@ import java.util.List;
 public interface HistoryManager {
     void add(Task task);
 
+    void remove(int id); // Добавили новый метод. Нужно реализовать в InMemoryHistoryManager
+
     List<Task> getHistory();
 }
