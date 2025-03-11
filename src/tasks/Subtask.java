@@ -2,7 +2,9 @@ package tasks;
 
 import status.Status;
 
-/**Класс наследующий Task, а так же является маленькой задачей класса Epic*/
+/**
+ * Класс наследующий Task, а так же является маленькой задачей класса Epic
+ */
 public class Subtask extends Task {
     private int epicId;
     private int updateID;
@@ -12,7 +14,7 @@ public class Subtask extends Task {
         this.epicId = epicId;
     }
 
-    public Subtask(int updateID ,String title, String description, Status status, int epicId) {
+    public Subtask(int updateID, String title, String description, Status status, int epicId) {
         super(title, description, status);
         this.updateID = updateID;
         this.epicId = epicId;

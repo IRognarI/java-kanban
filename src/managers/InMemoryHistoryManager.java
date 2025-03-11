@@ -5,7 +5,9 @@ import tasks.Task;
 import java.util.*;
 
 
-/**Данный класс реализует интерфейс HistoryManager*/
+/**
+ * Данный класс реализует интерфейс HistoryManager
+ */
 public class InMemoryHistoryManager implements HistoryManager {
 
     private static class Node {
