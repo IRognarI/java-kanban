@@ -10,7 +10,9 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-/**Данный клас реализует интерфейс TaskManager */
+/**
+ * Данный клас реализует интерфейс TaskManager
+ */
 public class InMemoryTaskManager implements TaskManager {
     private Map<Integer, Task> tasks = new HashMap<>();
     private Map<Integer, Epic> epics = new HashMap<>();
