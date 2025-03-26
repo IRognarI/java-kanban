@@ -2,7 +2,9 @@ package tasks;
 
 import status.Status;
 
-/**Класс для создания основной задачи*/
+/**
+ * Класс для создания основной задачи
+ */
 public class Task {
     private int id;
     private String title;
@@ -15,12 +17,12 @@ public class Task {
         this.status = status;
     }
 
-    public Task (String title, String description) {
+    public Task(String title, String description) {
         this.title = title;
         this.description = description;
     }
 
-    public Task (int id, String title, String description, Status status) {
+    public Task(int id, String title, String description, Status status) {
         this.id = id;
         this.title = title;
         this.description = description;
@@ -49,13 +51,5 @@ public class Task {
 
     public void setId(int id) {
         this.id = id;
-    }
-
-    public void setTitle(String title) {
-        this.title = title;
-    }
-
-    public void setDescription(String description) {
-        this.description = description;
     }
 }

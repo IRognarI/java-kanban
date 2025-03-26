@@ -1,6 +1,8 @@
 package managers;
 
-/**Утилитарный класс. Далее на нём будет лежать вся ответственность за создание менеджера задач*/
+/**
+ * Утилитарный класс. Далее на нём будет лежать вся ответственность за создание менеджера задач
+ */
 public class Managers {
     public static TaskManager getDefault() {
         return new InMemoryTaskManager();
