@@ -1,6 +1,7 @@
 package managers;
 
-import status.Status;
+import enums.Status;
+import enums.TaskType;
 import tasks.Epic;
 import tasks.Subtask;
 import tasks.Task;
@@ -43,7 +44,7 @@ public class InMemoryTaskManager implements TaskManager {
         subtask.setId(idCounter++);
         subtasks.put(subtask.getId(), subtask);
         epics.get(epicId).addSubtask(subtask.getId());
-        updateEpicStatus(epicId); // Обновление статуса эпика после добавления подзадачи
+        updateEpicStatus(epicId);
         return subtask;
     }
 
@@ -117,7 +118,16 @@ public class InMemoryTaskManager implements TaskManager {
 
     @Override
     public List<Task> getAllTasks() {
-        return new ArrayList<>(tasks.values());
+
+        List<Task> result = new ArrayList<>();
+
+        for (Task task : tasks.values()) {
+            if (task.getType() == TaskType.TASK) {
+                result.add(task);
+            }
+        }
+
+        return result;
     }
 
     @Override

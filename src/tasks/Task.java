@@ -1,6 +1,7 @@
 package tasks;
 
-import status.Status;
+import enums.Status;
+import enums.TaskType;
 
 /**
  * Класс для создания основной задачи
@@ -10,6 +11,7 @@ public class Task {
     private String title;
     private String description;
     private Status status;
+    private TaskType type = TaskType.TASK;
 
     public Task(String title, String description, Status status) {
         this.title = title;
@@ -27,6 +29,18 @@ public class Task {
         this.title = title;
         this.description = description;
         this.status = status;
+    }
+
+    public void setTitle(String title) {
+        this.title = title;
+    }
+
+    public void setDescription(String description) {
+        this.description = description;
+    }
+
+    public void setType(TaskType type) {
+        this.type = type;
     }
 
     public int getId() {
@@ -51,5 +65,14 @@ public class Task {
 
     public void setId(int id) {
         this.id = id;
+    }
+
+    @Override
+    public String toString() {
+        return String.format("%d,%s,%s,%s,%s,", id, type, title, status, description);
+    }
+
+    public TaskType getType() {
+        return type;
     }
 }
