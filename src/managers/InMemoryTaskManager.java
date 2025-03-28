@@ -1,6 +1,6 @@
 package managers;
 
-import status.Status;
+import enums.Status;
 import tasks.Epic;
 import tasks.Subtask;
 import tasks.Task;
@@ -14,9 +14,9 @@ import java.util.Map;
  * Данный клас реализует интерфейс TaskManager
  */
 public class InMemoryTaskManager implements TaskManager {
-    private Map<Integer, Task> tasks = new HashMap<>();
-    private Map<Integer, Epic> epics = new HashMap<>();
-    private Map<Integer, Subtask> subtasks = new HashMap<>();
+    protected Map<Integer, Task> tasks = new HashMap<>();
+    protected Map<Integer, Epic> epics = new HashMap<>();
+    protected Map<Integer, Subtask> subtasks = new HashMap<>();
     private final HistoryManager historyManager = Managers.getDefaultHistory();
     private int idCounter = 1;
 
@@ -43,7 +43,7 @@ public class InMemoryTaskManager implements TaskManager {
         subtask.setId(idCounter++);
         subtasks.put(subtask.getId(), subtask);
         epics.get(epicId).addSubtask(subtask.getId());
-        updateEpicStatus(epicId); // Обновление статуса эпика после добавления подзадачи
+        updateEpicStatus(epicId);
         return subtask;
     }
 
