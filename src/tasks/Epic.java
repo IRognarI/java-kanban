@@ -12,7 +12,7 @@ import java.util.List;
 public class Epic extends Task {
     private int id;
     private final List<Integer> subtaskId;
-    private TaskType type = TaskType.EPIC;
+    private final TaskType type = TaskType.EPIC;
 
     public Epic(String title, String description, Status status) {
         super(title, description, status);

@@ -9,7 +9,7 @@ import enums.TaskType;
 public class Subtask extends Task {
     private int epicId;
     private int updateID;
-    private TaskType type = TaskType.SUBTASK;
+    private final TaskType type = TaskType.SUBTASK;
 
     public Subtask(String title, String description, Status status, int epicId) {
         super(title, description, status);

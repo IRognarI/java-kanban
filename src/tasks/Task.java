@@ -8,10 +8,10 @@ import enums.TaskType;
  */
 public class Task {
     private int id;
-    private String title;
-    private String description;
+    private final String title;
+    private final String description;
     private Status status;
-    private TaskType type = TaskType.TASK;
+    private final TaskType type = TaskType.TASK;
 
     public Task(String title, String description, Status status) {
         this.title = title;
