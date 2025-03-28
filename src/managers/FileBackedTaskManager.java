@@ -29,7 +29,6 @@ public class FileBackedTaskManager extends InMemoryTaskManager {
         try {
             List<String> lines = Files.readAllLines(file.toPath());
 
-           
             for (int i = 1; i < lines.size(); i++) {
                 String line = lines.get(i).trim();
                 if (line.isEmpty()) break;
@@ -55,7 +54,6 @@ public class FileBackedTaskManager extends InMemoryTaskManager {
         return manager;
     }
 
-
     public void save() {
         try {
             StringBuilder sb = new StringBuilder();
@@ -79,7 +77,6 @@ public class FileBackedTaskManager extends InMemoryTaskManager {
         if (value == null || value.trim().isEmpty()) {
             return null;
         }
-
         try {
             String[] parts = value.split(",", -1);
             if (parts.length < 5) return null;
@@ -95,14 +92,14 @@ public class FileBackedTaskManager extends InMemoryTaskManager {
                     return new Task(id, title, description, status);
                 case EPIC:
                     Epic epic = new Epic(id, title, description, status);
-                   
+
                     if (parts.length > 5 && !parts[5].trim().isEmpty()) {
                         String[] subtaskIds = parts[5].trim().split(";");
                         for (String sid : subtaskIds) {
                             try {
                                 epic.addSubtask(Integer.parseInt(sid));
                             } catch (NumberFormatException e) {
-                               
+
                             }
                         }
                     }
