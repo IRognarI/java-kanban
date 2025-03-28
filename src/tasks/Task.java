@@ -1,7 +1,7 @@
 package tasks;
 
-import enums.Status;
-import enums.TaskType;
+import status.Status;
+import status.TaskType;
 
 /**
  * Класс для создания основной задачи

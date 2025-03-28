@@ -1,7 +1,7 @@
 package tasks;
 
-import enums.Status;
-import enums.TaskType;
+import status.Status;
+import status.TaskType;
 
 import java.util.ArrayList;
 import java.util.List;

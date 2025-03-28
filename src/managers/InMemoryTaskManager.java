@@ -1,6 +1,6 @@
 package managers;
 
-import enums.Status;
+import status.Status;
 import tasks.Epic;
 import tasks.Subtask;
 import tasks.Task;

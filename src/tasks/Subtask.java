@@ -1,7 +1,7 @@
 package tasks;
 
-import enums.Status;
-import enums.TaskType;
+import status.Status;
+import status.TaskType;
 
 /**
  * Класс наследующий Task, а так же является маленькой задачей класса Epic
