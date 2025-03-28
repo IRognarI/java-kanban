@@ -99,7 +99,7 @@ public class FileBackedTaskManager extends InMemoryTaskManager {
                             try {
                                 epic.addSubtask(Integer.parseInt(sid));
                             } catch (NumberFormatException e) {
-
+                                System.out.println(e.getMessage());
                             }
                         }
                     }
