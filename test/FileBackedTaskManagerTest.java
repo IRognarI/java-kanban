@@ -31,7 +31,7 @@ class FileBackedTaskManagerTest {
 
     @Test
     void shouldSaveAndLoadEmptyFile() {
-        manager.save();
+        manager.getMethodSave();
 
         FileBackedTaskManager loadedManager = FileBackedTaskManager.loadFromFile(tempFile);
 
@@ -49,7 +49,7 @@ class FileBackedTaskManagerTest {
 
         Task task = manager.createTask(new Task("Task 1", "Description"));
 
-        manager.save();
+        manager.getMethodSave();
 
         try {
             String content = Files.readString(tempFile.toPath());
