@@ -1,5 +1,3 @@
-package managerTest;
-
 import managers.InMemoryHistoryManager;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -39,7 +37,7 @@ class InMemoryHistoryManagerTest {
 
         List<Task> history = historyManager.getHistory();
         assertEquals(1, history.size());
-        assertEquals(task2, history.get(0)); // Проверяем, что осталась последняя версия задачи
+        assertEquals(task2, history.get(0));
     }
 
     @Test
@@ -84,7 +82,7 @@ class InMemoryHistoryManagerTest {
         historyManager.add(task2);
         historyManager.add(task3);
 
-        historyManager.remove(2); // Удаляем задачу из середины списка
+        historyManager.remove(2);
 
         List<Task> history = historyManager.getHistory();
         assertEquals(2, history.size());

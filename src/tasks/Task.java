@@ -1,15 +1,17 @@
 package tasks;
 
 import status.Status;
+import status.TaskType;
 
 /**
  * Класс для создания основной задачи
  */
 public class Task {
     private int id;
-    private String title;
-    private String description;
+    private final String title;
+    private final String description;
     private Status status;
+    private final TaskType type = TaskType.TASK;
 
     public Task(String title, String description, Status status) {
         this.title = title;
@@ -51,5 +53,14 @@ public class Task {
 
     public void setId(int id) {
         this.id = id;
+    }
+
+    @Override
+    public String toString() {
+        return String.format("%d,%s,%s,%s,%s,", id, type, title, status, description);
+    }
+
+    public TaskType getType() {
+        return type;
     }
 }
