@@ -32,7 +32,7 @@ public class FileBackedTaskManager extends InMemoryTaskManager {
 
             if (parts.length > 0) {
                 String[] lines = parts[0].split("\n");
-               
+
                 for (int i = 1; i < lines.length; i++) {
                     Task task = fromString(lines[i]);
                     if (task != null) {
@@ -96,16 +96,7 @@ public class FileBackedTaskManager extends InMemoryTaskManager {
     }
 
     private String toString(Task task) {
-        String[] fields = {
-                String.valueOf(task.getId()),
-                task.getType().name(),
-                task.getTitle(),
-                task.getStatus().name(),
-                task.getDescription(),
-                task.getStartTime() != null ? task.getStartTime().toString() : "",
-                task.getDuration() != null ? String.valueOf(Duration.ofMinutes(task.getDuration())) : "",
-                task instanceof Subtask ? String.valueOf(((Subtask) task).getEpicId()) : ""
-        };
+        String[] fields = {String.valueOf(task.getId()), task.getType().name(), task.getTitle(), task.getStatus().name(), task.getDescription(), task.getStartTime() != null ? task.getStartTime().toString() : "", task.getDuration() != null ? String.valueOf(Duration.ofMinutes(task.getDuration())) : "", task instanceof Subtask ? String.valueOf(((Subtask) task).getEpicId()) : ""};
         return String.join(",", fields);
     }
 
@@ -169,13 +160,13 @@ public class FileBackedTaskManager extends InMemoryTaskManager {
             try {
                 history.add(Integer.parseInt(id.trim()));
             } catch (NumberFormatException e) {
-               
+
             }
         }
         return history;
     }
 
-   
+
     @Override
     public Task createTask(Task task) {
         Task newTask = super.createTask(task);
