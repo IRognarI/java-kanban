@@ -160,7 +160,7 @@ public class FileBackedTaskManager extends InMemoryTaskManager {
             try {
                 history.add(Integer.parseInt(id.trim()));
             } catch (NumberFormatException e) {
-
+                System.err.println("Ошибка при преобразовании истории: " + e.getMessage());
             }
         }
         return history;
