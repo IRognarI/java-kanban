@@ -1,14 +1,14 @@
 package managers;
 
+import com.sun.jdi.InvalidTypeException;
+import exception.LocalDateTimeException;
 import status.Status;
 import tasks.Epic;
 import tasks.Subtask;
 import tasks.Task;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
+import java.util.stream.*;
 
 /**
  * Данный клас реализует интерфейс TaskManager
@@ -19,6 +19,11 @@ public class InMemoryTaskManager implements TaskManager {
     protected Map<Integer, Subtask> subtasks = new HashMap<>();
     private final HistoryManager historyManager = Managers.getDefaultHistory();
     private int idCounter = 1;
+
+
+    protected int getIdCounter() {
+        return idCounter;
+    }
 
     @Override
     public Task createTask(Task task) {
@@ -177,5 +182,76 @@ public class InMemoryTaskManager implements TaskManager {
         } else {
             epic.setStatus(Status.IN_PROGRESS);
         }
+    }
+
+    @Override
+    public Set<? extends Task> getPrioritizedTasks(List<? extends Task> tasksList) {
+
+        Set<? extends Task> someTasks = new TreeSet<>();
+
+        try {
+            if (tasksList == null) {
+                throw new NullPointerException("Список не может содержать null объекты!");
+            }
+            if (!tasksList.isEmpty()) {
+
+                if (tasksList instanceof Task) {
+                    someTasks = new TreeSet<>(getAllTasks());
+                    return someTasks;
+                }
+
+                if (tasksList instanceof Epic) {
+                    someTasks = new TreeSet<>(getAllEpics());
+                    return someTasks;
+                }
+
+                if (tasksList instanceof Subtask) {
+                    someTasks = new TreeSet<>(getAllSubtasks());
+                    return someTasks;
+                }
+            }
+        } catch (NullPointerException e) {
+            System.out.println(e.getMessage());
+        }
+        return someTasks;
+    }
+
+    @Override
+    public boolean lookingForTemporaryIntersectionsInTasks() {
+        Set<? extends Task> listOfSomeKindOfClass = getPrioritizedTasks(getAllTasks());
+
+        return listOfSomeKindOfClass.stream()
+                .anyMatch(task1 ->
+                        listOfSomeKindOfClass.stream()
+                                .filter(task2 -> !task1.equals(task2))
+                                .anyMatch(task2 ->
+                                        task1.getStartTime().isBefore(task2.getEndTime()) &&
+                                        task2.getStartTime().isBefore(task1.getEndTime())));
+    }
+
+    @Override
+    public boolean lookingForTemporaryIntersectionsInEpics() {
+        Set<? extends Task> listOfSomeKindOfClass = getPrioritizedTasks(getAllEpics());
+
+        return listOfSomeKindOfClass.stream()
+                .anyMatch(epic1 ->
+                        listOfSomeKindOfClass.stream()
+                                .filter(epic2 -> !epic1.equals(epic2))
+                                .anyMatch(epic2 ->
+                                        epic1.getStartTime().isBefore(epic2.getEndTime()) &&
+                                                epic2.getStartTime().isBefore(epic1.getEndTime())));
+    }
+
+    @Override
+    public boolean lookingForTemporaryIntersectionsInSubTasks() {
+        Set<? extends Task> listOfSomeKindOfClass = getPrioritizedTasks(getAllSubtasks());
+
+        return listOfSomeKindOfClass.stream()
+                .anyMatch(subTask1 ->
+                        listOfSomeKindOfClass.stream()
+                                .filter(subTask2 -> !subTask1.equals(subTask2))
+                                .anyMatch(subTask2 ->
+                                        subTask1.getStartTime().isBefore(subTask2.getEndTime()) &&
+                                                subTask2.getStartTime().isBefore(subTask1.getEndTime())));
     }
 }

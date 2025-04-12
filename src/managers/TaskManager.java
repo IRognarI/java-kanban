@@ -4,7 +4,7 @@ import tasks.Epic;
 import tasks.Subtask;
 import tasks.Task;
 
-import java.util.List;
+import java.util.*;
 
 /**
  * Данный интерфейс создан для реализации логики приложения. В нем декларируются основные методы.
@@ -43,4 +43,12 @@ public interface TaskManager {
     List<Subtask> getSubtasksByEpicId(int epicId);
 
     List<Task> getHistory();
+
+    Set<? extends Task> getPrioritizedTasks(List<? extends Task> list);
+
+    boolean lookingForTemporaryIntersectionsInTasks();
+
+    boolean lookingForTemporaryIntersectionsInEpics();
+
+    boolean lookingForTemporaryIntersectionsInSubTasks();
 }
