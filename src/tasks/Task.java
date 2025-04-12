@@ -1,6 +1,5 @@
 package tasks;
 
-import exception.LocalDateTimeException;
 import status.Status;
 import status.TaskType;
 
@@ -16,8 +15,8 @@ public class Task implements Comparable<Task> {
     private String description;
     private Status status;
     private final TaskType type = TaskType.TASK;
-    private LocalDateTime startTime;
-    private Duration duration;
+    private final LocalDateTime startTime;
+    private final Duration duration;
 
     public Task(String title, String description, Status status,
                 LocalDateTime startTime, Duration duration) {
