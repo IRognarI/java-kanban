@@ -6,6 +6,7 @@ import tasks.Subtask;
 import tasks.Task;
 
 import java.util.*;
+import java.util.stream.*;
 
 /**
  * Данный клас реализует интерфейс TaskManager
@@ -189,48 +190,34 @@ public class InMemoryTaskManager implements TaskManager {
     }
 
     @Override
-    public Set<? extends Task> getPrioritizedTasks(List<? extends Task> tasksList) {
-
-        Set<? extends Task> someTasks = new TreeSet<>();
-
-        try {
-            if (tasksList == null) {
-                throw new NullPointerException("Список не может содержать null объекты!");
-            }
-            if (!tasksList.isEmpty()) {
-
-                if (tasksList instanceof Task) {
-                    someTasks = new TreeSet<>(getAllTasks());
-                    return someTasks;
-                }
-
-                if (tasksList instanceof Epic) {
-                    someTasks = new TreeSet<>(getAllEpics());
-                    return someTasks;
-                }
-
-                if (tasksList instanceof Subtask) {
-                    someTasks = new TreeSet<>(getAllSubtasks());
-                    return someTasks;
-                }
-            }
-        } catch (NullPointerException e) {
-            System.out.println(e.getMessage());
+    public Set<Task> getPrioritizedTasks(List<? extends Task> tasksList) {
+        if (tasksList == null || tasksList.isEmpty()) {
+            return new LinkedHashSet<>();
         }
-        return someTasks;
+
+        return tasksList.stream()
+                .filter(task -> task.getStartTime() != null)
+                .sorted(Comparator.comparing(Task::getStartTime))
+                .collect(Collectors.toCollection(LinkedHashSet::new));
     }
 
     @Override
     public boolean lookingForTemporaryIntersectionsInTasks() {
-        Set<? extends Task> listOfSomeKindOfClass = getPrioritizedTasks(getAllTasks());
+        List<Task> tasksWithTime = getAllTasks().stream()
+                .filter(t -> t.getStartTime() != null && t.getEndTime() != null)
+                .toList();
 
-        return listOfSomeKindOfClass.stream()
-                .anyMatch(task1 ->
-                        listOfSomeKindOfClass.stream()
-                                .filter(task2 -> !task1.equals(task2))
-                                .anyMatch(task2 ->
-                                        task1.getStartTime().isBefore(task2.getEndTime()) &&
-                                                task2.getStartTime().isBefore(task1.getEndTime())));
+        return IntStream.range(0, tasksWithTime.size())
+                .anyMatch(i -> IntStream.range(i + 1, tasksWithTime.size())
+                        .anyMatch(j -> isOverlapping(
+                                tasksWithTime.get(i),
+                                tasksWithTime.get(j)
+                        )));
+    }
+
+    private boolean isOverlapping(Task a, Task b) {
+        return a.getStartTime().isBefore(b.getEndTime()) &&
+                b.getStartTime().isBefore(a.getEndTime());
     }
 
     @Override
