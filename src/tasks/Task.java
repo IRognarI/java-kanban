@@ -51,14 +51,6 @@ public class Task implements Comparable<Task> {
         this.id = id;
     }
 
-    public void setTitle(String title) {
-        this.title = title;
-    }
-
-    public void setDescription(String description) {
-        this.description = description;
-    }
-
     @Override
     public String toString() {
         return String.format("%d,%s,%s,%s,%s,", id, type, title, status, description);

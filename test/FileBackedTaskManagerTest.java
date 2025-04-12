@@ -22,14 +22,14 @@ class FileBackedTaskManagerTest {
 
     @Test
     void shouldLoadTasksFromFile() throws IOException {
-        // Подготовка тестовых данных
+       
         String csvData = """
             id,type,name,status,description,startTime,duration,epic
             1,TASK,Task 1,NEW,Description,2023-01-01T10:00,30,
             """;
         Files.writeString(tempFile.toPath(), csvData);
 
-        // Тестируем загрузку
+       
         FileBackedTaskManager manager = FileBackedTaskManager.loadFromFile(tempFile);
         Task task = manager.getTaskById(1);
 
@@ -41,18 +41,18 @@ class FileBackedTaskManagerTest {
     void shouldSaveWhenTaskAdded() {
         FileBackedTaskManager manager = new FileBackedTaskManager(tempFile);
 
-        // Это вызовет save() внутри
+       
         manager.createTask(new Task("Test", "Desc", Status.NEW,
                 LocalDateTime.now(), Duration.ofMinutes(30)));
 
-        // Проверяем результат сохранения
+       
         Assertions.assertTrue(tempFile.exists());
         Assertions.assertTrue(tempFile.length() > 0);
     }
 
     @Test
     void shouldHandleEmptyFile() throws IOException {
-        // Создаем пустой файл
+       
         Files.writeString(tempFile.toPath(), "");
 
         Assertions.assertDoesNotThrow(() -> {
