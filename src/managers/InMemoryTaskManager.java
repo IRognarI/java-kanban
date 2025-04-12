@@ -1,14 +1,11 @@
 package managers;
 
-import com.sun.jdi.InvalidTypeException;
-import exception.LocalDateTimeException;
 import status.Status;
 import tasks.Epic;
 import tasks.Subtask;
 import tasks.Task;
 
 import java.util.*;
-import java.util.stream.*;
 
 /**
  * Данный клас реализует интерфейс TaskManager
@@ -17,13 +14,8 @@ public class InMemoryTaskManager implements TaskManager {
     protected Map<Integer, Task> tasks = new HashMap<>();
     protected Map<Integer, Epic> epics = new HashMap<>();
     protected Map<Integer, Subtask> subtasks = new HashMap<>();
-    private final HistoryManager historyManager = Managers.getDefaultHistory();
-    private int idCounter = 1;
-
-
-    protected int getIdCounter() {
-        return idCounter;
-    }
+    protected HistoryManager historyManager = Managers.getDefaultHistory();
+    protected int idCounter = 1;
 
     @Override
     public Task createTask(Task task) {
@@ -54,17 +46,29 @@ public class InMemoryTaskManager implements TaskManager {
 
     @Override
     public Task getTaskById(int id) {
-        return tasks.get(id);
+        Task task = tasks.get(id);
+        if (task != null) {
+            historyManager.add(task);
+        }
+        return task;
     }
 
     @Override
     public Epic getEpicById(int id) {
-        return epics.get(id);
+        Epic epic = epics.get(id);
+        if (epic != null) {
+            historyManager.add(epic);
+        }
+        return epic;
     }
 
     @Override
     public Subtask getSubtaskById(int id) {
-        return subtasks.get(id);
+        Subtask subtask = subtasks.get(id);
+        if (subtask != null) {
+            historyManager.add(subtask);
+        }
+        return subtask;
     }
 
     @Override
@@ -226,7 +230,7 @@ public class InMemoryTaskManager implements TaskManager {
                                 .filter(task2 -> !task1.equals(task2))
                                 .anyMatch(task2 ->
                                         task1.getStartTime().isBefore(task2.getEndTime()) &&
-                                        task2.getStartTime().isBefore(task1.getEndTime())));
+                                                task2.getStartTime().isBefore(task1.getEndTime())));
     }
 
     @Override

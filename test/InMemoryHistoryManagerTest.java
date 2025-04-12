@@ -1,71 +1,116 @@
 import managers.InMemoryHistoryManager;
-import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Test;
-import status.Status;
+import org.junit.jupiter.api.*;
 import tasks.Task;
-
+import status.Status;
+import java.time.LocalDateTime;
+import java.time.Duration;
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
 
 class InMemoryHistoryManagerTest {
-
     private InMemoryHistoryManager historyManager;
+    private Task task1;
+    private Task task2;
+    private Task task3;
 
     @BeforeEach
     void setUp() {
         historyManager = new InMemoryHistoryManager();
+
+        LocalDateTime now = LocalDateTime.now();
+        task1 = new Task("Task 1", "Description 1", Status.NEW,
+                now, Duration.ofMinutes(30));
+        task2 = new Task("Task 2", "Description 2", Status.IN_PROGRESS,
+                now.plusHours(1), Duration.ofHours(1));
+        task3 = new Task("Task 3", "Description 3", Status.DONE,
+                now.plusHours(3), Duration.ofHours(1));
+
+       
+        task1.setId(1);
+        task2.setId(2);
+        task3.setId(3);
     }
 
     @Test
-    void addTaskToHistory() {
-        Task task = new Task(1, "Task 1", "Description 1", Status.NEW);
-        historyManager.add(task);
-
+    @DisplayName("Добавление задачи в историю")
+    void shouldAddTaskToHistory() {
+        historyManager.add(task1);
         List<Task> history = historyManager.getHistory();
+
         assertEquals(1, history.size());
-        assertEquals(task, history.get(0));
+        assertEquals(task1, history.get(0));
     }
 
     @Test
-    void addDuplicateTaskToHistory() {
-        Task task1 = new Task(1, "Task 1", "Description 1", Status.NEW);
-        Task task2 = new Task(1, "Task 1 Updated", "Description 1 Updated", Status.IN_PROGRESS);
+    @DisplayName("Добавление null задачи")
+    void shouldNotAddNullTask() {
+        historyManager.add(null);
+        List<Task> history = historyManager.getHistory();
 
+        assertTrue(history.isEmpty());
+    }
+
+    @Test
+    @DisplayName("Дублирование задачи в истории")
+    void shouldMoveTaskToEndWhenAddingDuplicate() {
         historyManager.add(task1);
         historyManager.add(task2);
+        historyManager.add(task1);
 
         List<Task> history = historyManager.getHistory();
+
+        assertEquals(2, history.size());
+        assertEquals(task2, history.get(0));
+        assertEquals(task1, history.get(1));
+    }
+
+    @Test
+    @DisplayName("Удаление задачи из истории")
+    void shouldRemoveTaskFromHistory() {
+        historyManager.add(task1);
+        historyManager.add(task2);
+        historyManager.remove(task1.getId());
+
+        List<Task> history = historyManager.getHistory();
+
         assertEquals(1, history.size());
         assertEquals(task2, history.get(0));
     }
 
     @Test
-    void removeTaskFromHistory() {
-        Task task1 = new Task(1, "Task 1", "Description 1", Status.NEW);
-        Task task2 = new Task(2, "Task 2", "Description 2", Status.NEW);
-
+    @DisplayName("Удаление несуществующей задачи")
+    void shouldDoNothingWhenRemovingNonExistentTask() {
         historyManager.add(task1);
-        historyManager.add(task2);
-
-        historyManager.remove(1);
+        historyManager.remove(999);
 
         List<Task> history = historyManager.getHistory();
+
         assertEquals(1, history.size());
-        assertEquals(task2, history.get(0));
     }
 
     @Test
-    void getHistoryInCorrectOrder() {
-        Task task1 = new Task(1, "Task 1", "Description 1", Status.NEW);
-        Task task2 = new Task(2, "Task 2", "Description 2", Status.NEW);
-        Task task3 = new Task(3, "Task 3", "Description 3", Status.NEW);
+    @DisplayName("Получение истории после удаления всех задач")
+    void shouldReturnEmptyHistoryAfterRemovingAllTasks() {
+        historyManager.add(task1);
+        historyManager.add(task2);
+        historyManager.remove(task1.getId());
+        historyManager.remove(task2.getId());
 
+        List<Task> history = historyManager.getHistory();
+
+        assertTrue(history.isEmpty());
+    }
+
+    @Test
+    @DisplayName("Порядок задач в истории")
+    void shouldMaintainInsertionOrder() {
         historyManager.add(task1);
         historyManager.add(task2);
         historyManager.add(task3);
 
         List<Task> history = historyManager.getHistory();
+
         assertEquals(3, history.size());
         assertEquals(task1, history.get(0));
         assertEquals(task2, history.get(1));
@@ -73,20 +118,20 @@ class InMemoryHistoryManagerTest {
     }
 
     @Test
-    void removeNodeFromLinkedList() {
-        Task task1 = new Task(1, "Task 1", "Description 1", Status.NEW);
-        Task task2 = new Task(2, "Task 2", "Description 2", Status.NEW);
-        Task task3 = new Task(3, "Task 3", "Description 3", Status.NEW);
-
-        historyManager.add(task1);
-        historyManager.add(task2);
-        historyManager.add(task3);
-
-        historyManager.remove(2);
+    @DisplayName("Ограничение на количество задач в истории")
+    void shouldHandleLargeNumberOfTasks() {
+       
+        for (int i = 1; i <= 15; i++) {
+            Task task = new Task("Task " + i, "Description " + i, Status.NEW,
+                    LocalDateTime.now(), Duration.ofHours(1));
+            task.setId(i);
+            historyManager.add(task);
+        }
 
         List<Task> history = historyManager.getHistory();
-        assertEquals(2, history.size());
-        assertEquals(task1, history.get(0));
-        assertEquals(task3, history.get(1));
+
+        assertEquals(15, history.size());
+       
+        assertEquals(15, history.get(history.size() - 1).getId());
     }
 }

@@ -15,14 +15,13 @@ import java.util.*;
 public class Epic extends Task {
     private final List<Integer> subtaskId;
     private final TaskType type = TaskType.EPIC;
-    private TaskManager inMemoryTaskManager;
+    private TaskManager inMemoryTaskManager = Managers.getDefault();
     List<Subtask> subtaskList = inMemoryTaskManager.getAllSubtasks();
 
-    public Epic(String title, String description, Status status, LocalDateTime startTime, LocalDateTime endTime,
-                Duration duration) {
-        super(title, description, status, startTime, endTime, duration);
+    public Epic(String title, String description, Status status,
+                LocalDateTime startTime, Duration duration) {
+        super(title, description, status, startTime, duration);
         this.subtaskId = new ArrayList<>();
-        inMemoryTaskManager = Managers.getDefault();
     }
 
     public void addSubtask(int subtaskId) {
@@ -40,48 +39,48 @@ public class Epic extends Task {
 
     @Override
     public LocalDateTime getStartTime() {
-        for (int i = 0; i < subtaskList.size() - 1; i++) {
-            for (int j = i + 1; j < subtaskList.size() - 1; j++) {
-                if (subtaskList.get(i).getStartTime().isBefore(subtaskList.get(j).getStartTime())) {
-                    LocalDateTime actualStartTime = subtaskList.get(i).getStartTime();
-                    setStartTime(actualStartTime);
-                    return getStartTime();
-                }
+        if (subtaskId.isEmpty()) {
+            return null;
+        }
+        LocalDateTime earliest = subtaskList.get(subtaskId.get(0)).getStartTime();
+        for (int id : subtaskId) {
+            Subtask subtask = subtaskList.get(id);
+            if (subtask != null && subtask.getStartTime() != null &&
+                    (earliest == null || subtask.getStartTime().isBefore(earliest))) {
+                earliest = subtask.getStartTime();
             }
         }
-        return getStartTime();
+        return earliest;
     }
 
     @Override
     public LocalDateTime getEndTime() {
-        for (int i = 0; i < subtaskList.size() - 1; i++) {
-            for (int j = i + 1; j < subtaskList.size() - 1; j++) {
-                if (subtaskList.get(i).getEndTime().isAfter(subtaskList.get(j).getEndTime())) {
-                    LocalDateTime actualEndTime = subtaskList.get(i).getEndTime();
-                    setEndTime(actualEndTime);
-                    return getEndTime();
-                }
+        if (subtaskId.isEmpty()) {
+            return null;
+        }
+        LocalDateTime latest = subtaskList.get(subtaskId.get(0)).getEndTime();
+        for (int id : subtaskId) {
+            Subtask subtask = subtaskList.get(id);
+            if (subtask != null && subtask.getEndTime() != null &&
+                    (latest == null || subtask.getEndTime().isAfter(latest))) {
+                latest = subtask.getEndTime();
             }
         }
-        return getEndTime();
+        return latest;
     }
 
     @Override
     public Long getDuration() {
-        Duration actualDuration = Duration.ofMinutes(getDuration());
-
-        try {
-            if (subtaskList == null) {
-                throw new NullPointerException("Коллекция Subtasks пустая!");
-            }
-            for (Subtask subtask : subtaskList) {
-                Duration durationToMinutes = Duration.ofMinutes(subtask.getDuration());
-                actualDuration = actualDuration.plus(durationToMinutes);
-                setDuration(actualDuration);
-            }
-        } catch (NullPointerException e) {
-            System.out.println(e.getMessage());
+        if (subtaskId.isEmpty()) {
+            return 0L;
         }
-        return getDuration();
+        long total = 0;
+        for (int id : subtaskId) {
+            Subtask subtask = subtaskList.get(id);
+            if (subtask != null && subtask.getDuration() != null) {
+                total += subtask.getDuration();
+            }
+        }
+        return total;
     }
 }
