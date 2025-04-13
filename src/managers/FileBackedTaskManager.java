@@ -29,37 +29,53 @@ public class FileBackedTaskManager extends InMemoryTaskManager {
             String content = Files.readString(file.toPath(), StandardCharsets.UTF_8);
             String[] parts = content.split("\n\n", 2);
 
-            if (parts.length > 0) {
-                String[] lines = parts[0].split("\n");
-
-                for (int i = 1; i < lines.length; i++) {
-                    Task task = fromString(lines[i]);
-                    if (task != null) {
-                        if (task instanceof Epic epic) {
-                            manager.epics.put(task.getId(), epic);
-                        } else if (task instanceof Subtask subtask) {
-                            manager.subtasks.put(task.getId(), subtask);
-                            Epic epic = manager.epics.get(subtask.getEpicId());
-                            if (epic != null) {
-                                epic.addSubtask(subtask.getId());
-                            }
-                        } else {
-                            manager.tasks.put(task.getId(), task);
-                        }
-                        manager.idCounter = Math.max(manager.idCounter, task.getId() + 1);
-                    }
-                }
+            if (parts.length == 0) {
+                return manager;
             }
 
+           
+            String[] lines = parts[0].split("\n");
+            for (int i = 1; i < lines.length; i++) {
+                Task task;
+                try {
+                    task = fromString(lines[i]);
+                } catch (IllegalArgumentException e) {
+                    continue;
+                }
+
+                if (task instanceof Epic epic) {
+                    manager.epics.put(task.getId(), epic);
+                } else if (task instanceof Subtask subtask) {
+                    manager.subtasks.put(task.getId(), subtask);
+                    Epic epic = manager.epics.get(subtask.getEpicId());
+                    if (epic != null) {
+                        epic.addSubtask(subtask.getId());
+                    }
+                } else {
+                    manager.tasks.put(task.getId(), task);
+                }
+                manager.idCounter = Math.max(manager.idCounter, task.getId() + 1);
+            }
+
+           
             if (parts.length > 1) {
                 List<Integer> history = historyFromString(parts[1]);
                 for (int id : history) {
-                    if (manager.tasks.containsKey(id)) {
-                        manager.historyManager.add(manager.tasks.get(id));
-                    } else if (manager.epics.containsKey(id)) {
-                        manager.historyManager.add(manager.epics.get(id));
-                    } else if (manager.subtasks.containsKey(id)) {
-                        manager.historyManager.add(manager.subtasks.get(id));
+                    Task task = manager.tasks.get(id);
+                    if (task != null) {
+                        manager.historyManager.add(task);
+                        continue;
+                    }
+
+                    Epic epic = manager.epics.get(id);
+                    if (epic != null) {
+                        manager.historyManager.add(epic);
+                        continue;
+                    }
+
+                    Subtask subtask = manager.subtasks.get(id);
+                    if (subtask != null) {
+                        manager.historyManager.add(subtask);
                     }
                 }
             }

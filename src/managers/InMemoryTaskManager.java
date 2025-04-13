@@ -220,8 +220,7 @@ public class InMemoryTaskManager implements TaskManager {
                 b.getStartTime().isBefore(a.getEndTime());
     }
 
-    @Override
-    public boolean lookingForTemporaryIntersectionsInEpics() {
+    private boolean lookingForTemporaryIntersectionsInEpics() {
         Set<? extends Task> listOfSomeKindOfClass = getPrioritizedTasks(getAllEpics());
 
         return listOfSomeKindOfClass.stream()
@@ -233,8 +232,7 @@ public class InMemoryTaskManager implements TaskManager {
                                                 epic2.getStartTime().isBefore(epic1.getEndTime())));
     }
 
-    @Override
-    public boolean lookingForTemporaryIntersectionsInSubTasks() {
+    private boolean lookingForTemporaryIntersectionsInSubTasks() {
         Set<? extends Task> listOfSomeKindOfClass = getPrioritizedTasks(getAllSubtasks());
 
         return listOfSomeKindOfClass.stream()

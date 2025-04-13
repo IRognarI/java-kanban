@@ -47,8 +47,4 @@ public interface TaskManager {
     Set<? extends Task> getPrioritizedTasks(List<? extends Task> list);
 
     boolean lookingForTemporaryIntersectionsInTasks();
-
-    boolean lookingForTemporaryIntersectionsInEpics();
-
-    boolean lookingForTemporaryIntersectionsInSubTasks();
 }
