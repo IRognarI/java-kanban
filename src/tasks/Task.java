@@ -11,8 +11,8 @@ import java.time.LocalDateTime;
  */
 public class Task implements Comparable<Task> {
     private int id;
-    private String title;
-    private String description;
+    private final String title;
+    private final String description;
     private Status status;
     private final TaskType type = TaskType.TASK;
     private final LocalDateTime startTime;

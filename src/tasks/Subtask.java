@@ -10,7 +10,7 @@ import java.time.LocalDateTime;
  * Класс наследующий Task, а так же является маленькой задачей класса Epic
  */
 public class Subtask extends Task {
-    private int epicId;
+    private final int epicId;
     private final TaskType type = TaskType.SUBTASK;
 
     public Subtask(String title, String description, Status status, int epicId,

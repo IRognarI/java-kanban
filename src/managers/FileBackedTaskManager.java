@@ -33,7 +33,6 @@ public class FileBackedTaskManager extends InMemoryTaskManager {
                 return manager;
             }
 
-           
             String[] lines = parts[0].split("\n");
             for (int i = 1; i < lines.length; i++) {
                 Task task;
@@ -57,7 +56,6 @@ public class FileBackedTaskManager extends InMemoryTaskManager {
                 manager.idCounter = Math.max(manager.idCounter, task.getId() + 1);
             }
 
-           
             if (parts.length > 1) {
                 List<Integer> history = historyFromString(parts[1]);
                 for (int id : history) {
