@@ -5,10 +5,8 @@ import tasks.Epic;
 import tasks.Subtask;
 import tasks.Task;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
+import java.util.stream.*;
 
 /**
  * Данный клас реализует интерфейс TaskManager
@@ -17,8 +15,8 @@ public class InMemoryTaskManager implements TaskManager {
     protected Map<Integer, Task> tasks = new HashMap<>();
     protected Map<Integer, Epic> epics = new HashMap<>();
     protected Map<Integer, Subtask> subtasks = new HashMap<>();
-    private final HistoryManager historyManager = Managers.getDefaultHistory();
-    private int idCounter = 1;
+    protected HistoryManager historyManager = Managers.getDefaultHistory();
+    protected int idCounter = 1;
 
     @Override
     public Task createTask(Task task) {
@@ -49,17 +47,29 @@ public class InMemoryTaskManager implements TaskManager {
 
     @Override
     public Task getTaskById(int id) {
-        return tasks.get(id);
+        Task task = tasks.get(id);
+        if (task != null) {
+            historyManager.add(task);
+        }
+        return task;
     }
 
     @Override
     public Epic getEpicById(int id) {
-        return epics.get(id);
+        Epic epic = epics.get(id);
+        if (epic != null) {
+            historyManager.add(epic);
+        }
+        return epic;
     }
 
     @Override
     public Subtask getSubtaskById(int id) {
-        return subtasks.get(id);
+        Subtask subtask = subtasks.get(id);
+        if (subtask != null) {
+            historyManager.add(subtask);
+        }
+        return subtask;
     }
 
     @Override
@@ -177,5 +187,60 @@ public class InMemoryTaskManager implements TaskManager {
         } else {
             epic.setStatus(Status.IN_PROGRESS);
         }
+    }
+
+    @Override
+    public Set<Task> getPrioritizedTasks(List<? extends Task> tasksList) {
+        if (tasksList == null || tasksList.isEmpty()) {
+            return new LinkedHashSet<>();
+        }
+
+        return tasksList.stream()
+                .filter(task -> task.getStartTime() != null)
+                .sorted(Comparator.comparing(Task::getStartTime))
+                .collect(Collectors.toCollection(LinkedHashSet::new));
+    }
+
+    @Override
+    public boolean lookingForTemporaryIntersectionsInTasks() {
+        List<Task> tasksWithTime = getAllTasks().stream()
+                .filter(t -> t.getStartTime() != null && t.getEndTime() != null)
+                .toList();
+
+        return IntStream.range(0, tasksWithTime.size())
+                .anyMatch(i -> IntStream.range(i + 1, tasksWithTime.size())
+                        .anyMatch(j -> isOverlapping(
+                                tasksWithTime.get(i),
+                                tasksWithTime.get(j)
+                        )));
+    }
+
+    private boolean isOverlapping(Task a, Task b) {
+        return a.getStartTime().isBefore(b.getEndTime()) &&
+                b.getStartTime().isBefore(a.getEndTime());
+    }
+
+    private boolean lookingForTemporaryIntersectionsInEpics() {
+        Set<? extends Task> listOfSomeKindOfClass = getPrioritizedTasks(getAllEpics());
+
+        return listOfSomeKindOfClass.stream()
+                .anyMatch(epic1 ->
+                        listOfSomeKindOfClass.stream()
+                                .filter(epic2 -> !epic1.equals(epic2))
+                                .anyMatch(epic2 ->
+                                        epic1.getStartTime().isBefore(epic2.getEndTime()) &&
+                                                epic2.getStartTime().isBefore(epic1.getEndTime())));
+    }
+
+    private boolean lookingForTemporaryIntersectionsInSubTasks() {
+        Set<? extends Task> listOfSomeKindOfClass = getPrioritizedTasks(getAllSubtasks());
+
+        return listOfSomeKindOfClass.stream()
+                .anyMatch(subTask1 ->
+                        listOfSomeKindOfClass.stream()
+                                .filter(subTask2 -> !subTask1.equals(subTask2))
+                                .anyMatch(subTask2 ->
+                                        subTask1.getStartTime().isBefore(subTask2.getEndTime()) &&
+                                                subTask2.getStartTime().isBefore(subTask1.getEndTime())));
     }
 }

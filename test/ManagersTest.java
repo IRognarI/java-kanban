@@ -1,18 +1,18 @@
-import managers.InMemoryHistoryManager;
-import managers.InMemoryTaskManager;
-import managers.Managers;
+import managers.*;
+import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 
-import static org.junit.jupiter.api.Assertions.*;
-
 class ManagersTest {
+
     @Test
-    void getDefaultShouldInitializeInMemoryTaskManager() {
-        assertInstanceOf(InMemoryTaskManager.class, Managers.getDefault());
+    void returnInMemoryTaskManagerClass() {
+        TaskManager manager = Managers.getDefault();
+        Assertions.assertTrue(manager instanceof InMemoryTaskManager);
     }
 
     @Test
-    void getDefaultHistoryShouldInitializeInMemoryHistoryManager() {
-        assertInstanceOf(InMemoryHistoryManager.class, Managers.getDefaultHistory());
+    void returnInMemoryHistoryManagerClass() {
+        HistoryManager manager = Managers.getDefaultHistory();
+        Assertions.assertTrue(manager instanceof InMemoryHistoryManager);
     }
 }

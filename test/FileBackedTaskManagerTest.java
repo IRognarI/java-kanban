@@ -1,63 +1,63 @@
-import status.Status;
 import managers.FileBackedTaskManager;
-import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import tasks.Epic;
-import tasks.Subtask;
+import status.Status;
 import tasks.Task;
 
 import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
-
-import static org.junit.jupiter.api.Assertions.assertTrue;
-import static org.junit.jupiter.api.Assertions.fail;
+import java.time.Duration;
+import java.time.LocalDateTime;
 
 class FileBackedTaskManagerTest {
     private File tempFile;
-    private FileBackedTaskManager manager;
 
     @BeforeEach
     void setUp() throws IOException {
         tempFile = File.createTempFile("tasks", ".csv");
-        manager = new FileBackedTaskManager(tempFile);
-    }
-
-    @AfterEach
-    void tearDown() {
-        tempFile.delete();
+        tempFile.deleteOnExit();
     }
 
     @Test
-    void shouldSaveAndLoadEmptyFile() {
-        manager.getMethodSave();
+    void shouldLoadTasksFromFile() throws IOException {
+       
+        String csvData = """
+            id,type,name,status,description,startTime,duration,epic
+            1,TASK,Task 1,NEW,Description,2023-01-01T10:00,30,
+            """;
+        Files.writeString(tempFile.toPath(), csvData);
 
-        FileBackedTaskManager loadedManager = FileBackedTaskManager.loadFromFile(tempFile);
+       
+        FileBackedTaskManager manager = FileBackedTaskManager.loadFromFile(tempFile);
+        Task task = manager.getTaskById(1);
 
-        assertTrue(loadedManager.getAllTasks().isEmpty());
-        assertTrue(loadedManager.getAllEpics().isEmpty());
-        assertTrue(loadedManager.getAllSubtasks().isEmpty());
+        Assertions.assertNotNull(task, "Задача должна быть загружена");
+        Assertions.assertEquals("Task 1", task.getTitle());
     }
 
     @Test
-    void shouldSaveMultipleTasks() {
+    void shouldSaveWhenTaskAdded() {
+        FileBackedTaskManager manager = new FileBackedTaskManager(tempFile);
 
-        Epic epic = manager.createEpic(new Epic("Epic 1", "Description"));
+       
+        manager.createTask(new Task("Test", "Desc", Status.NEW,
+                LocalDateTime.now(), Duration.ofMinutes(30)));
 
-        Subtask subtask = manager.createSubtask(new Subtask("Subtask 1", "Description", Status.NEW, epic.getId()));
+       
+        Assertions.assertTrue(tempFile.exists());
+        Assertions.assertTrue(tempFile.length() > 0);
+    }
 
-        Task task = manager.createTask(new Task("Task 1", "Description"));
+    @Test
+    void shouldHandleEmptyFile() throws IOException {
+       
+        Files.writeString(tempFile.toPath(), "");
 
-        manager.getMethodSave();
-
-        try {
-            String content = Files.readString(tempFile.toPath());
-            assertTrue(content.contains("Task 1"));
-            assertTrue(content.contains("Epic 1"));
-            assertTrue(content.contains("Subtask 1"));
-        } catch (IOException e) {
-            fail("Ошибка чтения файла", e);
-        }
+        Assertions.assertDoesNotThrow(() -> {
+            FileBackedTaskManager manager = FileBackedTaskManager.loadFromFile(tempFile);
+            Assertions.assertTrue(manager.getAllTasks().isEmpty());
+        });
     }
 }
