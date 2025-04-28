@@ -1,4 +1,4 @@
-package status;
+package enums;
 
 public enum Status {
     NEW,
