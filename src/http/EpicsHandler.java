@@ -48,7 +48,7 @@ class EpicHttpHandler implements HttpHandler {
             JsonElement jsonElement = JsonParser.parseString(body);
             JsonObject jsonObject = jsonElement.getAsJsonObject();
 
-           
+
             if (!jsonObject.has("title") || !jsonObject.has("description") || !jsonObject.has("status")) {
                 sendResponse(exchange, 400, "Missing required fields");
                 return;

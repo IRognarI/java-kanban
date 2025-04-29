@@ -47,11 +47,11 @@ class TaskHttpHandler implements HttpHandler {
 
     private void handleGet(HttpExchange exchange, String query) throws IOException {
         if (query == null) {
-           
+
             String response = gson.toJson(taskManager.getAllTasks());
             sendResponse(exchange, 200, response);
         } else {
-           
+
             Optional<Integer> taskId = parseIdFromQuery(query);
             if (taskId.isEmpty()) {
                 sendResponse(exchange, 400, "Invalid task id");
@@ -91,15 +91,15 @@ class TaskHttpHandler implements HttpHandler {
     }
 
     private void handleDelete(HttpExchange exchange, String query) throws IOException {
-           
-            Optional<Integer> taskId = parseIdFromQuery(query);
-            if (taskId.isEmpty()) {
-                sendResponse(exchange, 400, "Invalid task id");
-                return;
-            }
 
-            taskManager.removeTask(taskId.get());
-            sendResponse(exchange, 200, "Task deleted");
+        Optional<Integer> taskId = parseIdFromQuery(query);
+        if (taskId.isEmpty()) {
+            sendResponse(exchange, 400, "Invalid task id");
+            return;
+        }
+
+        taskManager.removeTask(taskId.get());
+        sendResponse(exchange, 200, "Task deleted");
     }
 
     private Optional<Integer> parseIdFromQuery(String query) {

@@ -89,14 +89,14 @@ class SubtaskHttpHandler implements HttpHandler {
 
     private void handleDelete(HttpExchange exchange, String query) throws IOException {
 
-            Optional<Integer> subtaskId = parseIdFromQuery(query);
-            if (subtaskId.isEmpty()) {
-                sendResponse(exchange, 400, "Invalid subtask id");
-                return;
-            }
+        Optional<Integer> subtaskId = parseIdFromQuery(query);
+        if (subtaskId.isEmpty()) {
+            sendResponse(exchange, 400, "Invalid subtask id");
+            return;
+        }
 
-            taskManager.removeSubtask(subtaskId.get());
-            sendResponse(exchange, 200, "Subtask deleted");
+        taskManager.removeSubtask(subtaskId.get());
+        sendResponse(exchange, 200, "Subtask deleted");
     }
 
     private Optional<Integer> parseIdFromQuery(String query) {

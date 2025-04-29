@@ -48,9 +48,9 @@ public interface TaskManager {
 
     boolean lookingForTemporaryIntersectionsInTasks();
 
-    public void deleteTasks();
+    void deleteTasks();
 
-    public void deleteSubtasks();
+    void deleteSubtasks();
 
-    public void deleteEpics();
+    void deleteEpics();
 }
