@@ -47,4 +47,10 @@ public interface TaskManager {
     Set<? extends Task> getPrioritizedTasks(List<? extends Task> list);
 
     boolean lookingForTemporaryIntersectionsInTasks();
+
+    public void deleteTasks();
+
+    public void deleteSubtasks();
+
+    public void deleteEpics();
 }

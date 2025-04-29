@@ -2,8 +2,8 @@ package tasks;
 
 import managers.Managers;
 import managers.TaskManager;
-import status.Status;
-import status.TaskType;
+import enums.Status;
+import enums.TaskType;
 
 import java.time.Duration;
 import java.time.LocalDateTime;
@@ -14,7 +14,7 @@ import java.util.*;
  */
 public class Epic extends Task {
     private final List<Integer> subtaskId;
-    private final TaskType type = TaskType.EPIC;
+   
     private final TaskManager inMemoryTaskManager = Managers.getDefault();
     List<Subtask> subtaskList = inMemoryTaskManager.getAllSubtasks();
 
@@ -33,8 +33,13 @@ public class Epic extends Task {
     }
 
     @Override
+    public TaskType getType() {
+        return TaskType.EPIC;
+    }
+
+    @Override
     public String toString() {
-        return String.format("%d,%s,%s,%s,%s,", getId(), type, getTitle(), getStatus(), getDescription());
+        return String.format("%d,%s,%s,%s,%s,", getId(), getType(), getTitle(), getStatus(), getDescription());
     }
 
     @Override
@@ -42,12 +47,13 @@ public class Epic extends Task {
         if (subtaskId.isEmpty()) {
             return null;
         }
-        LocalDateTime earliest = subtaskList.get(subtaskId.get(0)).getStartTime();
+        LocalDateTime earliest = null;
         for (int id : subtaskId) {
-            Subtask subtask = subtaskList.get(id);
-            if (subtask != null && subtask.getStartTime() != null &&
-                    (earliest == null || subtask.getStartTime().isBefore(earliest))) {
-                earliest = subtask.getStartTime();
+            Subtask subtask = inMemoryTaskManager.getSubtaskById(id);
+            if (subtask != null && subtask.getStartTime() != null) {
+                if (earliest == null || subtask.getStartTime().isBefore(earliest)) {
+                    earliest = subtask.getStartTime();
+                }
             }
         }
         return earliest;
@@ -58,12 +64,13 @@ public class Epic extends Task {
         if (subtaskId.isEmpty()) {
             return null;
         }
-        LocalDateTime latest = subtaskList.get(subtaskId.get(0)).getEndTime();
+        LocalDateTime latest = null;
         for (int id : subtaskId) {
-            Subtask subtask = subtaskList.get(id);
-            if (subtask != null && subtask.getEndTime() != null &&
-                    (latest == null || subtask.getEndTime().isAfter(latest))) {
-                latest = subtask.getEndTime();
+            Subtask subtask = inMemoryTaskManager.getSubtaskById(id);
+            if (subtask != null && subtask.getEndTime() != null) {
+                if (latest == null || subtask.getEndTime().isAfter(latest)) {
+                    latest = subtask.getEndTime();
+                }
             }
         }
         return latest;
@@ -76,7 +83,7 @@ public class Epic extends Task {
         }
         long total = 0;
         for (int id : subtaskId) {
-            Subtask subtask = subtaskList.get(id);
+            Subtask subtask = inMemoryTaskManager.getSubtaskById(id);
             if (subtask != null && subtask.getDuration() != null) {
                 total += subtask.getDuration();
             }

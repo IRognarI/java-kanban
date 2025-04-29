@@ -1,7 +1,7 @@
 import managers.InMemoryHistoryManager;
 import org.junit.jupiter.api.*;
 import tasks.Task;
-import status.Status;
+import enums.Status;
 import java.time.LocalDateTime;
 import java.time.Duration;
 import java.util.List;

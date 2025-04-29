@@ -1,8 +1,8 @@
 package managers;
 
 import exception.ManagerSaveException;
-import status.Status;
-import status.TaskType;
+import enums.Status;
+import enums.TaskType;
 import tasks.Epic;
 import tasks.Subtask;
 import tasks.Task;
@@ -109,7 +109,11 @@ public class FileBackedTaskManager extends InMemoryTaskManager {
     }
 
     private String toString(Task task) {
-        String[] fields = {String.valueOf(task.getId()), task.getType().name(), task.getTitle(), task.getStatus().name(), task.getDescription(), task.getStartTime() != null ? task.getStartTime().toString() : "", task.getDuration() != null ? String.valueOf(Duration.ofMinutes(task.getDuration())) : "", task instanceof Subtask ? String.valueOf(((Subtask) task).getEpicId()) : ""};
+        String[] fields = {String.valueOf(task.getId()), task.getType().name(), task.getTitle(),
+                task.getStatus().name(), task.getDescription(),
+                task.getStartTime() != null ? task.getStartTime().toString() : "",
+                task.getDuration() != null ? String.valueOf(task.getDuration()) : "",
+                task instanceof Subtask ? String.valueOf(((Subtask) task).getEpicId()) : ""};
         return String.join(",", fields);
     }
 

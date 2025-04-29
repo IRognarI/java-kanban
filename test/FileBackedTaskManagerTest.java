@@ -2,7 +2,7 @@ import managers.FileBackedTaskManager;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import status.Status;
+import enums.Status;
 import tasks.Task;
 
 import java.io.File;

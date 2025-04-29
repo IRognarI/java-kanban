@@ -1,7 +1,7 @@
 package tasks;
 
-import status.Status;
-import status.TaskType;
+import enums.Status;
+import enums.TaskType;
 
 import java.time.Duration;
 import java.time.LocalDateTime;
@@ -11,12 +11,17 @@ import java.time.LocalDateTime;
  */
 public class Subtask extends Task {
     private final int epicId;
-    private final TaskType type = TaskType.SUBTASK;
+   
 
     public Subtask(String title, String description, Status status, int epicId,
                    LocalDateTime startTime, Duration duration) {
         super(title, description, status, startTime, duration);
         this.epicId = epicId;
+    }
+
+    @Override
+    public TaskType getType() {
+        return TaskType.SUBTASK;
     }
 
     public int getEpicId() {
@@ -25,6 +30,6 @@ public class Subtask extends Task {
 
     @Override
     public String toString() {
-        return String.format("%d,%s,%s,%s,%s,%d", getId(), type, getTitle(), getStatus(), getDescription(), epicId);
+        return String.format("%d,%s,%s,%s,%s,%d", getId(), getType(), getTitle(), getStatus(), getDescription(), epicId);
     }
 }

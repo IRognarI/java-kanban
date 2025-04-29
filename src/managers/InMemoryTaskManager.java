@@ -1,6 +1,6 @@
 package managers;
 
-import status.Status;
+import enums.Status;
 import tasks.Epic;
 import tasks.Subtask;
 import tasks.Task;
@@ -121,6 +121,27 @@ public class InMemoryTaskManager implements TaskManager {
     }
 
     @Override
+    public void deleteTasks() {
+        tasks.clear();
+    }
+
+    @Override
+    public void deleteSubtasks() {
+        subtasks.clear();
+       
+        for (Epic epic : epics.values()) {
+            epic.getSubtaskId().clear();
+            updateEpicStatus(epic.getId());
+        }
+    }
+
+    @Override
+    public void deleteEpics() {
+        subtasks.clear();
+        epics.clear();
+    }
+
+    @Override
     public List<Task> getHistory() {
         return historyManager.getHistory();
     }
@@ -192,13 +213,14 @@ public class InMemoryTaskManager implements TaskManager {
     @Override
     public Set<Task> getPrioritizedTasks(List<? extends Task> tasksList) {
         if (tasksList == null || tasksList.isEmpty()) {
-            return new LinkedHashSet<>();
+            return new TreeSet<>(Comparator.comparing(Task::getStartTime));
         }
 
-        return tasksList.stream()
+        TreeSet<Task> prioritizedTasks = new TreeSet<>(Comparator.comparing(Task::getStartTime));
+        tasksList.stream()
                 .filter(task -> task.getStartTime() != null)
-                .sorted(Comparator.comparing(Task::getStartTime))
-                .collect(Collectors.toCollection(LinkedHashSet::new));
+                .forEach(prioritizedTasks::add);
+        return prioritizedTasks;
     }
 
     @Override
