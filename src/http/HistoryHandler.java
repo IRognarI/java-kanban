@@ -8,11 +8,11 @@ import managers.TaskManager;
 import java.io.IOException;
 import java.io.OutputStream;
 
-class HistoryHttpHandler implements HttpHandler {
+class HistoryHandler implements HttpHandler {
     private final TaskManager taskManager;
     private final Gson gson;
 
-    public HistoryHttpHandler(TaskManager taskManager, Gson gson) {
+    public HistoryHandler(TaskManager taskManager, Gson gson) {
         this.taskManager = taskManager;
         this.gson = gson;
     }

@@ -8,11 +8,11 @@ import java.io.IOException;
 import java.io.OutputStream;
 import java.nio.charset.StandardCharsets;
 
-public abstract class BaseHttpHandler {
+public abstract class BaseHandler {
     protected final TaskManager taskManager;
     protected final Gson gson;
 
-    public BaseHttpHandler(TaskManager taskManager, Gson gson) {
+    public BaseHandler(TaskManager taskManager, Gson gson) {
         this.taskManager = taskManager;
         this.gson = gson;
     }

@@ -8,11 +8,11 @@ import managers.TaskManager;
 import java.io.IOException;
 import java.io.OutputStream;
 
-class PrioritizedHttpHandler implements HttpHandler {
+class PrioritizedHandler implements HttpHandler {
     private final TaskManager taskManager;
     private final Gson gson;
 
-    public PrioritizedHttpHandler(TaskManager taskManager, Gson gson) {
+    public PrioritizedHandler(TaskManager taskManager, Gson gson) {
         this.taskManager = taskManager;
         this.gson = gson;
     }

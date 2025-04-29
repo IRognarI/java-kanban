@@ -12,11 +12,11 @@ import java.io.OutputStream;
 import java.nio.charset.StandardCharsets;
 import java.util.Optional;
 
-class TaskHttpHandler implements HttpHandler {
+class TaskHandler implements HttpHandler {
     private final TaskManager taskManager;
     private final Gson gson;
 
-    public TaskHttpHandler(TaskManager taskManager, Gson gson) {
+    public TaskHandler(TaskManager taskManager, Gson gson) {
         this.taskManager = taskManager;
         this.gson = gson;
     }

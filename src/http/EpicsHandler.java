@@ -15,11 +15,11 @@ import java.io.InputStream;
 import java.io.OutputStream;
 import java.nio.charset.StandardCharsets;
 
-class EpicHttpHandler implements HttpHandler {
+class EpicsHandler implements HttpHandler {
     private final TaskManager taskManager;
     private final Gson gson;
 
-    public EpicHttpHandler(TaskManager taskManager, Gson gson) {
+    public EpicsHandler(TaskManager taskManager, Gson gson) {
         this.taskManager = taskManager;
         this.gson = gson;
     }

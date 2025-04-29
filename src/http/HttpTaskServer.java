@@ -39,11 +39,11 @@ public class HttpTaskServer {
     }
 
     private void configureEndpoints() {
-        server.createContext("/tasks", new TaskHttpHandler(taskManager, gson));
-        server.createContext("/subtasks", new SubtaskHttpHandler(taskManager, gson));
-        server.createContext("/epics", new EpicHttpHandler(taskManager, gson));
-        server.createContext("/history", new HistoryHttpHandler(taskManager, gson));
-        server.createContext("/prioritized", new PrioritizedHttpHandler(taskManager, gson));
+        server.createContext("/tasks", new TaskHandler(taskManager, gson));
+        server.createContext("/subtasks", new SubtaskHandler(taskManager, gson));
+        server.createContext("/epics", new EpicsHandler(taskManager, gson));
+        server.createContext("/history", new HistoryHandler(taskManager, gson));
+        server.createContext("/prioritized", new PrioritizedHandler(taskManager, gson));
     }
 
     public void start() {
