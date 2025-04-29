@@ -14,7 +14,6 @@ import java.util.*;
  */
 public class Epic extends Task {
     private final List<Integer> subtaskId;
-   
     private final TaskManager inMemoryTaskManager = Managers.getDefault();
     List<Subtask> subtaskList = inMemoryTaskManager.getAllSubtasks();
 
