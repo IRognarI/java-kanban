@@ -1,5 +1,6 @@
 package tasks;
 
+import annotations.ClassInformation;
 import managers.Managers;
 import managers.TaskManager;
 import enums.Status;
@@ -12,6 +13,7 @@ import java.util.*;
 /**
  * Класс наследующий Task и являющийся подзадачей главной задачи Task
  */
+@ClassInformation("Подзадача основной задачи")
 public class Epic extends Task {
     private final List<Integer> subtaskId;
     private final TaskManager inMemoryTaskManager = Managers.getDefault();

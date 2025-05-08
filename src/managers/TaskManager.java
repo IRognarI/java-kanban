@@ -1,5 +1,6 @@
 package managers;
 
+import annotations.ClassInformation;
 import tasks.Epic;
 import tasks.Subtask;
 import tasks.Task;
@@ -9,6 +10,7 @@ import java.util.*;
 /**
  * Данный интерфейс создан для реализации логики приложения. В нем декларируются основные методы.
  */
+@ClassInformation("Основные возможности менеджера задач")
 public interface TaskManager {
     Task createTask(Task task);
 

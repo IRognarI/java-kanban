@@ -1,5 +1,6 @@
 package tasks;
 
+import annotations.ClassInformation;
 import enums.Status;
 import enums.TaskType;
 
@@ -9,6 +10,7 @@ import java.time.LocalDateTime;
 /**
  * Класс наследующий Task, а так же является маленькой задачей класса Epic
  */
+@ClassInformation("Подзадачи Epic")
 public class Subtask extends Task {
     private final int epicId;
 

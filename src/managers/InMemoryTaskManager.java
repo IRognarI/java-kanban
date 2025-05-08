@@ -1,5 +1,7 @@
 package managers;
 
+import annotations.ClassInformation;
+import annotations.MethodInformation;
 import enums.Status;
 import tasks.Epic;
 import tasks.Subtask;
@@ -8,9 +10,7 @@ import tasks.Task;
 import java.util.*;
 import java.util.stream.*;
 
-/**
- * Данный клас реализует интерфейс TaskManager
- */
+@ClassInformation("Реализует методы интерфейса TaskManager")
 public class InMemoryTaskManager implements TaskManager {
     protected Map<Integer, Task> tasks = new HashMap<>();
     protected Map<Integer, Epic> epics = new HashMap<>();
@@ -19,6 +19,7 @@ public class InMemoryTaskManager implements TaskManager {
     protected int idCounter = 1;
 
     @Override
+    @MethodInformation("Создание Task")
     public Task createTask(Task task) {
         task.setId(idCounter++);
         tasks.put(task.getId(), task);
@@ -26,6 +27,7 @@ public class InMemoryTaskManager implements TaskManager {
     }
 
     @Override
+    @MethodInformation("Создание Epic")
     public Epic createEpic(Epic epic) {
         epic.setId(idCounter++);
         epics.put(epic.getId(), epic);
@@ -33,6 +35,7 @@ public class InMemoryTaskManager implements TaskManager {
     }
 
     @Override
+    @MethodInformation("Создание SubTask")
     public Subtask createSubtask(Subtask subtask) {
         int epicId = subtask.getEpicId();
         if (!epics.containsKey(epicId)) {
@@ -46,6 +49,7 @@ public class InMemoryTaskManager implements TaskManager {
     }
 
     @Override
+    @MethodInformation("Получение Task по id")
     public Task getTaskById(int id) {
         Task task = tasks.get(id);
         if (task != null) {
@@ -55,6 +59,7 @@ public class InMemoryTaskManager implements TaskManager {
     }
 
     @Override
+    @MethodInformation("Получение Epic по id")
     public Epic getEpicById(int id) {
         Epic epic = epics.get(id);
         if (epic != null) {
@@ -64,6 +69,7 @@ public class InMemoryTaskManager implements TaskManager {
     }
 
     @Override
+    @MethodInformation("Получение SubTask по id")
     public Subtask getSubtaskById(int id) {
         Subtask subtask = subtasks.get(id);
         if (subtask != null) {
@@ -73,29 +79,34 @@ public class InMemoryTaskManager implements TaskManager {
     }
 
     @Override
+    @MethodInformation("Обновление Task")
     public void updateTask(Task task) {
         tasks.put(task.getId(), task);
     }
 
     @Override
+    @MethodInformation("Обновление Epic")
     public void updateEpic(Epic epic) {
         epics.put(epic.getId(), epic);
         updateEpicStatus(epic.getId());
     }
 
     @Override
+    @MethodInformation("Обновление SubTask")
     public void updateSubtask(Subtask subtask) {
         subtasks.put(subtask.getId(), subtask);
         updateEpicStatus(subtask.getEpicId());
     }
 
     @Override
+    @MethodInformation("Удаление Task по id")
     public void removeTask(int id) {
         tasks.remove(id);
         historyManager.remove(id);
     }
 
     @Override
+    @MethodInformation("Удаление Epic по id")
     public void removeEpic(int id) {
         Epic epic = epics.remove(id);
         if (epic != null) {
@@ -108,6 +119,7 @@ public class InMemoryTaskManager implements TaskManager {
     }
 
     @Override
+    @MethodInformation("Удаление SubTask по id")
     public void removeSubtask(int id) {
         Subtask subtask = subtasks.remove(id);
         if (subtask != null) {
@@ -121,11 +133,13 @@ public class InMemoryTaskManager implements TaskManager {
     }
 
     @Override
+    @MethodInformation("Удаление всех Task")
     public void deleteTasks() {
         tasks.clear();
     }
 
     @Override
+    @MethodInformation("Удаление всех SubTask")
     public void deleteSubtasks() {
         subtasks.clear();
 
@@ -136,32 +150,38 @@ public class InMemoryTaskManager implements TaskManager {
     }
 
     @Override
+    @MethodInformation("Удаление всех Epic")
     public void deleteEpics() {
         subtasks.clear();
         epics.clear();
     }
 
     @Override
+    @MethodInformation("Получение истории просмотров Object<? extends Task>")
     public List<Task> getHistory() {
         return historyManager.getHistory();
     }
 
     @Override
+    @MethodInformation("Получение листа Task")
     public List<Task> getAllTasks() {
         return new ArrayList<>(tasks.values());
     }
 
     @Override
+    @MethodInformation("Получение листа Epic")
     public List<Epic> getAllEpics() {
         return new ArrayList<>(epics.values());
     }
 
     @Override
+    @MethodInformation("Получение листа SubTask")
     public List<Subtask> getAllSubtasks() {
         return new ArrayList<>(subtasks.values());
     }
 
     @Override
+    @MethodInformation("Получение SubTask по id Epic")
     public List<Subtask> getSubtasksByEpicId(int epicId) {
         Epic epic = epics.get(epicId);
         if (epic == null) {
@@ -175,6 +195,7 @@ public class InMemoryTaskManager implements TaskManager {
         return epicSubtasks;
     }
 
+    @MethodInformation("Вспомогательный метод по обновлению статуса Epic")
     private void updateEpicStatus(int epicId) {
         Epic epic = epics.get(epicId);
         if (epic == null) {
@@ -211,6 +232,7 @@ public class InMemoryTaskManager implements TaskManager {
     }
 
     @Override
+    @MethodInformation("Вычисление приоритетных Задач")
     public Set<Task> getPrioritizedTasks(List<? extends Task> tasksList) {
         if (tasksList == null || tasksList.isEmpty()) {
             return new TreeSet<>(Comparator.comparing(Task::getStartTime));
@@ -224,6 +246,7 @@ public class InMemoryTaskManager implements TaskManager {
     }
 
     @Override
+    @MethodInformation("Проверка задач (Task) на пересечение")
     public boolean lookingForTemporaryIntersectionsInTasks() {
         List<Task> tasksWithTime = getAllTasks().stream()
                 .filter(t -> t.getStartTime() != null && t.getEndTime() != null)
@@ -237,11 +260,14 @@ public class InMemoryTaskManager implements TaskManager {
                         )));
     }
 
+    @MethodInformation("Вспомогательный метод для метода проверки задач на пересечение. Проверяет, что" +
+            " пересечение нет.")
     private boolean isOverlapping(Task a, Task b) {
         return a.getStartTime().isBefore(b.getEndTime()) &&
                 b.getStartTime().isBefore(a.getEndTime());
     }
 
+    @MethodInformation("Проверка задач (Epic) на пересечение")
     private boolean lookingForTemporaryIntersectionsInEpics() {
         Set<? extends Task> listOfSomeKindOfClass = getPrioritizedTasks(getAllEpics());
 
@@ -254,6 +280,7 @@ public class InMemoryTaskManager implements TaskManager {
                                                 epic2.getStartTime().isBefore(epic1.getEndTime())));
     }
 
+    @MethodInformation("Проверка задач (SubTask) на пересечение")
     private boolean lookingForTemporaryIntersectionsInSubTasks() {
         Set<? extends Task> listOfSomeKindOfClass = getPrioritizedTasks(getAllSubtasks());
 

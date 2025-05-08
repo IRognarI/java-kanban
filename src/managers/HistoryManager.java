@@ -1,13 +1,11 @@
 package managers;
 
+import annotations.ClassInformation;
 import tasks.Task;
 
 import java.util.*;
 
-
-/**
- * Данный интерфейс создан для управления историей просмотров
- */
+@ClassInformation("Интерфейс управляющий историей просмотров")
 public interface HistoryManager {
     void add(Task task);
 

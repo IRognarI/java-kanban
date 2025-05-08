@@ -1,13 +1,11 @@
 package managers;
 
+import annotations.ClassInformation;
 import tasks.Task;
 
 import java.util.*;
 
-
-/**
- * Данный класс реализует интерфейс HistoryManager
- */
+@ClassInformation("Реализует методы интерфейса TaskManager")
 public class InMemoryHistoryManager implements HistoryManager {
 
     private static class Node {

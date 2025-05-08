@@ -1,5 +1,6 @@
 package tasks;
 
+import annotations.ClassInformation;
 import enums.Status;
 import enums.TaskType;
 
@@ -9,6 +10,7 @@ import java.time.LocalDateTime;
 /**
  * Класс для создания основной задачи
  */
+@ClassInformation("Основная задача")
 public class Task implements Comparable<Task> {
     private int id;
     private final String title;

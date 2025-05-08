@@ -1,5 +1,8 @@
 package managers;
 
+import annotations.ClassInformation;
+import annotations.MethodInformation;
+import annotations.MethodInformation;
 import exception.ManagerSaveException;
 import enums.Status;
 import enums.TaskType;
@@ -15,6 +18,7 @@ import java.time.Duration;
 import java.time.LocalDateTime;
 import java.util.*;
 
+@ClassInformation("Расширяет InMemoryTaskManager для добавления возможности сохранять состояние задач в файл")
 public class FileBackedTaskManager extends InMemoryTaskManager {
     private final File file;
 
@@ -22,6 +26,7 @@ public class FileBackedTaskManager extends InMemoryTaskManager {
         this.file = file;
     }
 
+    @MethodInformation("Восстанавливает данные из файла")
     public static FileBackedTaskManager loadFromFile(File file) {
         FileBackedTaskManager manager = new FileBackedTaskManager(file);
 
@@ -85,6 +90,7 @@ public class FileBackedTaskManager extends InMemoryTaskManager {
         return manager;
     }
 
+    @MethodInformation("Записывает данные в файл")
     private void save() {
         try {
             StringBuilder builder = new StringBuilder();
@@ -108,6 +114,7 @@ public class FileBackedTaskManager extends InMemoryTaskManager {
         }
     }
 
+    @MethodInformation("Десиарилизует объекты в строку")
     private String toString(Task task) {
         String[] fields = {String.valueOf(task.getId()), task.getType().name(), task.getTitle(),
                 task.getStatus().name(), task.getDescription(),
@@ -117,6 +124,7 @@ public class FileBackedTaskManager extends InMemoryTaskManager {
         return String.join(",", fields);
     }
 
+    @MethodInformation("Сериализует объекты из строки")
     private static Task fromString(String value) {
         if (value == null || value.trim().isEmpty()) {
             return null;
@@ -159,6 +167,7 @@ public class FileBackedTaskManager extends InMemoryTaskManager {
         }
     }
 
+    @MethodInformation("Десиарилизует объекты в строку")
     private static String historyToString(HistoryManager manager) {
         List<String> ids = new ArrayList<>();
         for (Task task : manager.getHistory()) {
@@ -167,6 +176,7 @@ public class FileBackedTaskManager extends InMemoryTaskManager {
         return String.join(",", ids);
     }
 
+    @MethodInformation("Сериализует объекты из строки")
     private static List<Integer> historyFromString(String value) {
         List<Integer> history = new ArrayList<>();
         if (value == null || value.isBlank()) {
